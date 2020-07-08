@@ -1,0 +1,198 @@
+name: Essentials
+version: ${version}
+main: net.nighthawkempires.essentials.EssentialsPlugin
+description: Nighthawk Empires' Essentials Plugin.
+author: NoneVale_
+api-version: 1.15
+depend: [Core]
+commands:
+  ban:
+    usage: </command>
+    description: Ban command for Nighthawk Empires' Essentials Plugin.
+  chat:
+    aliases: [say]
+    usage: </command>
+    description: Ban command for Nighthawk Empires' Essentials Plugin.
+  clearinventory:
+    aliases: [clearinv, ci]
+    usage: </command>
+    description: Clear Inventory command for Nighthawk Empires' Essentials Plugin.
+  craft:
+    usage: </command>
+    aliases: [workbench]
+    description: Craft command for Nighthawk Empires' Essentials Plugin.
+  createkit:
+    usage: </command>
+    description: Create Kit command for Nighthawk Empires' Essentials Plugin.
+  deletehome:
+    aliases: [delhome]
+    usage: </command>
+    description: Delete Home command for Nighthawk Empires' Essentials Plugin.
+  deletekit:
+    aliases: [delkit]
+    usage: </command>
+    description: Delete Kit command for Nighthawk Empires' Essentials Plugin.
+  deletespawn:
+    aliases: [delspawn]
+    usage: </command>
+    description: Delete Spawn command for Nighthawk Empires' Essentials Plugin.
+  deletewarp:
+    aliases: [delwarp]
+    usage: </command>
+    description: Delete Warp command for Nighthawk Empires' Essentials Plugin.
+  deop:
+    usage: </command>
+    description: DeOP command for Nighthawk Empires' Essentials Plugin.
+  enderchest:
+    aliases: [echest]
+    usage: </command>
+    description: Ender Chest command for Nighthawk Empires' Essentials Plugin.
+  feed:
+    usage: </command>
+    description: Feed command for Nighthawk Empires' Essentials Plugin.
+  fly:
+    usage: </command>
+    description: Fly command for Nighthawk Empires' Essentials Plugin.
+  gamemode:
+    aliases: [gm]
+    usage: </command>
+    description: GameMode command for Nighthawk Empires' Essentials Plugin.
+  give:
+    aliases: [item, i]
+    usage: </command>
+    description: Give command for Nighthawk Empires' Essentials Plugin.
+  godmode:
+    aliases: [god]
+    usage: </command>
+    description: Godmode command for Nighthawk Empires' Essentials Plugin.
+  heal:
+    usage: </command>
+    description: Heal command for Nighthawk Empires' Essentials Plugin.
+  help:
+    usage: </command>
+    description: Help command for Nighthawk Empires' Essentials Plugin.
+  home:
+    usage: </command>
+    description: Home command for Nighthawk Empires' Essentials Plugin.
+  homes:
+    usage: </command>
+    description: Homes command for Nighthawk Empires' Essentials Plugin.
+  inventory:
+    usage: </command>
+    description: Inventory command for Nighthawk Empires' Essentials Plugin.
+  kick:
+    usage: </command>
+    description: Kick command for Nighthawk Empires' Essentials Plugin.
+  kill:
+    usage: </command>
+    description: Kill command for Nighthawk Empires' Essentials Plugin.
+  kit:
+    usage: </command>
+    description: Kit command for Nighthawk Empires' Essentials Plugin.
+  kits:
+    usage: </command>
+    description: Kits command for Nighthawk Empires' Essentials Plugin.
+  me:
+    usage: </command>
+    description: Me command for Nighthawk Empires' Essentials Plugin.
+  message:
+    aliases: [pm, msg]
+    usage: </command>
+    description: Message command for Nighthawk Empires' Essentials Plugin.
+  mute:
+    usage: </command>
+    description: Mute command for Nighthawk Empires' Essentials Plugin.
+  nickname:
+    aliases: [nick]
+    usage: </command>
+    description: Kits command for Nighthawk Empires' Essentials Plugin.
+  op:
+    usage: </command>
+    description: Me command for Nighthawk Empires' Essentials Plugin.
+  record:
+    usage: </command>
+    description: Message command for Nighthawk Empires' Essentials Plugin.
+  rename:
+    usage: </command>
+    description: Rename command for Nighthawk Empires' Essentials Plugin.
+  repair:
+    usage: </command>
+    description: Repair command for Nighthawk Empires' Essentials Plugin.
+  reply:
+    aliases: [r]
+    usage: </command>
+    description: Repair command for Nighthawk Empires' Essentials Plugin.
+  sayas:
+    usage: </command>
+    description: Say As command for Nighthawk Empires' Essentials Plugin.
+  scoreboard:
+    aliases: [scoreboards, sb]
+    usage: </command>
+    description: Scoreboard command for Nighthawk Empires' Essentials Plugin.
+  sethome:
+    usage: </command>
+    description: Set Home command for Nighthawk Empires' Essentials Plugin.
+  setspawn:
+    usage: </command>
+    description: Set Spwn command for Nighthawk Empires' Essentials Plugin.
+  setwarp:
+    usage: </command>
+    description: Set Warp command for Nighthawk Empires' Essentials Plugin.
+  slap:
+    usage: </command>
+    description: Slap command for Nighthawk Empires' Essentials Plugin.
+  smite:
+    usage: </command>
+    description: Smite command for Nighthawk Empires' Essentials Plugin.
+  spawn:
+    usage: </command>
+    description: Spawn command for Nighthawk Empires' Essentials Plugin.
+  spawnmob:
+    aliases: [nick]
+    usage: </command>
+    description: Spawn Mob command for Nighthawk Empires' Essentials Plugin.
+  speed:
+    usage: </command>
+    description: Speed command for Nighthawk Empires' Essentials Plugin.
+  sudo:
+    usage: </command>
+    description: Sudo command for Nighthawk Empires' Essentials Plugin.
+  teleport:
+    aliases: [tp]
+    usage: </command>
+    description: Teleport command for Nighthawk Empires' Essentials Plugin.
+  teleporthere:
+    aliases: [tphere]
+    usage: </command>
+    description: Teleport Here command for Nighthawk Empires' Essentials Plugin.
+  time:
+    usage: </command>
+    description: Time command for Nighthawk Empires' Essentials Plugin.
+  tpaccept:
+    usage: </command>
+    description: TPAccpet command for Nighthawk Empires' Essentials Plugin.
+  tpa:
+    usage: </command>
+    description: TPA command for Nighthawk Empires' Essentials Plugin.
+  unban:
+    usage: </command>
+    description: Unban command for Nighthawk Empires' Essentials Plugin.
+  unmute:
+    usage: </command>
+    description: Unmute command for Nighthawk Empires' Essentials Plugin.
+  vanish:
+    aliases: [v]
+    usage: </command>
+    description: Vanish command for Nighthawk Empires' Essentials Plugin.
+  warn:
+    usage: </command>
+    description: Warn command for Nighthawk Empires' Essentials Plugin.
+  warp:
+    usage: </command>
+    description: Warp command for Nighthawk Empires' Essentials Plugin.
+  warps:
+    usage: </command>
+    description: Warps command for Nighthawk Empires' Essentials Plugin.
+  weather:
+    usage: </command>
+    description: Weather command for Nighthawk Empires' Essentials Plugin.
