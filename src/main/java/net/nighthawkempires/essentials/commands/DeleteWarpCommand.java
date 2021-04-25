@@ -5,6 +5,7 @@ import net.nighthawkempires.core.user.UserModel;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import static net.nighthawkempires.core.CorePlugin.*;
@@ -57,6 +58,9 @@ public class DeleteWarpCommand implements CommandExecutor {
                     player.sendMessage(getMessages().getChatTag(INVALID_SYNTAX));
                     return true;
             }
+        } else if (sender instanceof ConsoleCommandSender) {
+            sender.sendMessage(getMessages().getChatMessage(GRAY + "This command is not available from the console."));
+            return true;
         }
         return false;
     }

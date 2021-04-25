@@ -3,6 +3,7 @@ package net.nighthawkempires.essentials.commands;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import static net.nighthawkempires.core.CorePlugin.*;
@@ -53,6 +54,26 @@ public class DeleteKitCommand implements CommandExecutor {
                     return true;
                 default:
                     player.sendMessage(getMessages().getChatTag(INVALID_SYNTAX));
+                    return true;
+            }
+        } else if (sender instanceof ConsoleCommandSender) {
+            switch (args.length) {
+                case 0:
+                    sender.sendMessage(help);
+                    return true;
+                case 1:
+                    String name = args[0];
+
+                    if (!getKitRegistry().kitExists(name)) {
+                        sender.sendMessage(getMessages().getChatMessage(GRAY + "I'm sorry, but there isn't a kit that exists with that name."));
+                        return true;
+                    }
+
+                    getKitRegistry().deleteKit(name);
+                    sender.sendMessage(getMessages().getChatMessage(GRAY + "Kit " + AQUA + name + GRAY + " has been deleted."));
+                    return true;
+                default:
+                    sender.sendMessage(getMessages().getChatTag(INVALID_SYNTAX));
                     return true;
             }
         }

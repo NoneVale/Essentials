@@ -5,6 +5,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerTeleportEvent;
 
@@ -54,7 +55,6 @@ public class TeleportHereCommand implements CommandExecutor {
                                     online.sendMessage(getMessages().getChatMessage(GRAY + "You have been teleported to " + GREEN + player.getName() + GRAY + "."));
                                 }
                             }
-
                             player.sendMessage(getMessages().getChatMessage(GRAY + "You have teleported everyone to your location."));
                             return true;
                         default:
@@ -75,6 +75,9 @@ public class TeleportHereCommand implements CommandExecutor {
                     player.sendMessage(getMessages().getChatTag(INVALID_SYNTAX));
                     return true;
             }
+        } else if (sender instanceof ConsoleCommandSender) {
+            sender.sendMessage(getMessages().getChatMessage(GRAY + "This command is not available from the console."));
+            return true;
         }
         return false;
     }

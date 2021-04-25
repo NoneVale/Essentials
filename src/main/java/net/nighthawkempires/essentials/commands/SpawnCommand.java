@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
@@ -92,6 +93,56 @@ public class SpawnCommand implements CommandExecutor {
                     return true;
                 default:
                     player.sendMessage(getMessages().getChatTag(INVALID_SYNTAX));
+                    return true;
+            }
+        } else if (sender instanceof ConsoleCommandSender) {
+            PublicLocationModel publicLocationModel = getPublicLocationRegistry().getPublicLocations();
+            switch (args.length) {
+                case 0:
+                    String[] help = new String[] {
+                            getMessages().getMessage(CHAT_HEADER),
+                            DARK_GRAY + "Command" + GRAY + ": Spawn    " + DARK_GRAY + "    [Optional], <Required>",
+                            getMessages().getMessage(CHAT_FOOTER),
+                            getMessages().getCommand("spawn", "<player>", "Teleport a player to spawn"),
+                            getMessages().getMessage(CHAT_FOOTER)
+                    };
+
+                    sender.sendMessage(help);
+                case 1:
+                    String name = args[0];
+                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
+                    if (!offlinePlayer.isOnline()) {
+                        sender.sendMessage(getMessages().getChatTag(PLAYER_NOT_ONLINE));
+                        return true;
+                    }
+
+                    Player target = offlinePlayer.getPlayer();
+
+                    World world = target.getWorld();
+                    if (!publicLocationModel.hasSpawn(world)) {
+                        sender.sendMessage(getMessages().getChatMessage(GRAY + "There is not a spawn set in " + GREEN + target.getName() + "'s "
+                                + GRAY + "current world.  Teleporting them to a different world if possible."));
+
+                        for (World tpWorld : Bukkit.getWorlds()) {
+                            if (publicLocationModel.hasSpawn(tpWorld)) {
+                                world = tpWorld;
+                                break;
+                            }
+                        }
+
+                        if (!publicLocationModel.hasSpawn(world)) {
+                            sender.sendMessage(getMessages().getChatMessage(GRAY + "I could not find a world with a spawn set."));
+                            return true;
+                        }
+                    }
+
+                    target.teleport(publicLocationModel.getSpawn(world));
+                    sender.sendMessage(getMessages().getChatMessage(GRAY + "You have teleported " + GREEN + target.getName() + GRAY
+                            + " to the spawn in world " + AQUA + world.getName() + GRAY + "."));
+                    target.sendMessage(getMessages().getChatMessage(GRAY + "You have been teleported to spawn."));
+                    return true;
+                default:
+                    sender.sendMessage(getMessages().getChatTag(INVALID_SYNTAX));
                     return true;
             }
         }

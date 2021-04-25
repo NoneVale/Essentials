@@ -1,8 +1,10 @@
 package net.nighthawkempires.essentials.commands;
 
+import net.nighthawkempires.core.CorePlugin;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import static net.nighthawkempires.core.CorePlugin.getCommandManager;
@@ -50,8 +52,22 @@ public class MeCommand implements CommandExecutor {
                             + GRAY + " " + ITALIC + messageBuilder.toString().trim() + DARK_GRAY  + "" + ITALIC + " **");
                     return true;
             }
-        }
+        } else if (sender instanceof ConsoleCommandSender) {
+            switch (args.length) {
+                case 0:
+                    sender.sendMessage(help);
+                    return true;
+                default:
+                    StringBuilder messageBuilder = new StringBuilder();
+                    for (String s : args) {
+                        messageBuilder.append(s).append(" ");
+                    }
 
+                    getMessages().broadcatServerMessage(DARK_GRAY + "" + ITALIC + "** " + BLUE + "" + ITALIC + CorePlugin.getConfigg().getConsoleDisplayName()
+                            + GRAY + " " + ITALIC + messageBuilder.toString().trim() + DARK_GRAY  + "" + ITALIC + " **");
+                    return true;
+            }
+        }
         return false;
     }
 }

@@ -6,6 +6,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import static net.nighthawkempires.core.CorePlugin.*;
@@ -63,8 +64,31 @@ public class OPCommand implements CommandExecutor {
                 default:
                     player.sendMessage(getMessages().getChatTag(INVALID_SYNTAX));
             }
-        }
+        } else if (sender instanceof ConsoleCommandSender) {
+            switch (args.length) {
+                case 0:
+                    sender.sendMessage(help);
+                    return true;
+                case 1:
+                    String name = args[0];
+                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
+                    if (offlinePlayer.isOp()) {
+                        sender.sendMessage(getMessages().getChatMessage(GREEN + offlinePlayer.getName() + GRAY + " is already a server operator."));
+                        return true;
+                    }
 
+                    offlinePlayer.setOp(true);
+                    sender.sendMessage(getMessages().getChatMessage(GREEN + offlinePlayer.getName() + GRAY + " is now a server operator"));
+                    if (offlinePlayer.isOnline()) {
+                        Player target = offlinePlayer.getPlayer();
+                        target.sendMessage(getMessages().getChatMessage(GRAY + "You are now a server operator."));
+                        return true;
+                    }
+                    return true;
+                default:
+                    sender.sendMessage(getMessages().getChatTag(INVALID_SYNTAX));
+            }
+        }
         return false;
     }
 }

@@ -10,47 +10,43 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import static net.nighthawkempires.core.CorePlugin.*;
+import static net.nighthawkempires.core.CorePlugin.getMessages;
 import static net.nighthawkempires.core.lang.Messages.*;
+import static net.nighthawkempires.core.lang.Messages.INVALID_SYNTAX;
 import static org.bukkit.ChatColor.*;
+import static org.bukkit.ChatColor.GRAY;
 
-public class FeedCommand implements CommandExecutor {
+public class ExtinguishCommand implements CommandExecutor {
 
-    public FeedCommand() {
-        getCommandManager().registerCommands("feed", new String[] {
-                "ne.feed.self", "ne.feed.other"
+
+    public ExtinguishCommand() {
+        getCommandManager().registerCommands("extinguish", new String[] {
+                "ne.extinguish.self", "ne.extinguish.other"
         });
     }
-
-    private String[] help = new String[] {
-            getMessages().getMessage(CHAT_HEADER),
-            DARK_GRAY + "Command" + GRAY + ": Feed    " + DARK_GRAY + "    [Optional], <Required>",
-            getMessages().getMessage(CHAT_FOOTER),
-            getMessages().getCommand("feed", "<player>", "Feed a player"),
-            getMessages().getMessage(CHAT_FOOTER)
-    };
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             UserModel userModel = getUserRegistry().getUser(player.getUniqueId());
 
-            if (!player.hasPermission("ne.feed.self") && !player.hasPermission("ne.feed.other")) {
+            if (!player.hasPermission("ne.extinguish.self") && !player.hasPermission("ne.extinguish.other")) {
                 player.sendMessage(getMessages().getChatTag(NO_PERMS));
                 return true;
             }
 
             switch (args.length) {
                 case 0:
-                    if (!player.hasPermission("ne.feed.self")) {
+                    if (!player.hasPermission("ne.extinguish.self")) {
                         player.sendMessage(getMessages().getChatTag(NO_PERMS));
                         return true;
                     }
 
-                    player.setFoodLevel(20);
-                    player.sendMessage(getMessages().getChatMessage(GRAY + "Your hunger has been sated."));
+                    player.setFireTicks(0);
+                    player.sendMessage(getMessages().getChatMessage(GRAY + "You have been extinguished."));
                     return true;
                 case 1:
-                    if (!player.hasPermission("ne.feed.other")) {
+                    if (!player.hasPermission("ne.heal.other")) {
                         player.sendMessage(getMessages().getChatTag(NO_PERMS));
                         return true;
                     }
@@ -59,10 +55,10 @@ public class FeedCommand implements CommandExecutor {
 
                     if (name.toLowerCase().equals("*")) {
                         for (Player online : Bukkit.getOnlinePlayers()) {
-                            online.setFoodLevel(20);
-                            online.sendMessage(getMessages().getChatMessage(GRAY + "Your hunger has been sated."));
+                            online.setFireTicks(0);
+                            online.sendMessage(getMessages().getChatMessage(GRAY + "You have been extinguished."));
                         }
-                        player.sendMessage(getMessages().getChatMessage(GRAY + "You have sated every ones hunger."));
+                        player.sendMessage(getMessages().getChatMessage(GRAY + "You have extinguished everyone."));
                         return true;
                     }
 
@@ -72,9 +68,11 @@ public class FeedCommand implements CommandExecutor {
                         return true;
                     } else {
                         Player target = offlinePlayer.getPlayer();
-                        target.setFoodLevel(20);
-                        player.sendMessage(getMessages().getChatMessage(GREEN + target.getName() + "'s " + GRAY + "hunger has been sated."));
-                        target.sendMessage(getMessages().getChatMessage(GRAY + "Your hunger has been sated."));
+
+                        target.setFireTicks(0);
+                        player.sendMessage(getMessages().getChatMessage(GREEN + target.getName() + GRAY + " has been extinguished."));
+                        target.sendMessage(getMessages().getChatMessage(GRAY + "You have been extinguished."));
+                        return true;
                     }
                 default:
                     player.sendMessage(getMessages().getChatTag(INVALID_SYNTAX));
@@ -83,6 +81,14 @@ public class FeedCommand implements CommandExecutor {
         } else if (sender instanceof ConsoleCommandSender) {
             switch (args.length) {
                 case 0:
+                    String[] help = new String[] {
+                            getMessages().getMessage(CHAT_HEADER),
+                            DARK_GRAY + "Command" + GRAY + ": Heal    " + DARK_GRAY + "    [Optional], <Required>",
+                            getMessages().getMessage(CHAT_FOOTER),
+                            getMessages().getCommand("heal", "<player>", "Feed a player"),
+                            getMessages().getMessage(CHAT_FOOTER)
+                    };
+
                     sender.sendMessage(help);
                     return true;
                 case 1:
@@ -90,10 +96,10 @@ public class FeedCommand implements CommandExecutor {
 
                     if (name.toLowerCase().equals("*")) {
                         for (Player online : Bukkit.getOnlinePlayers()) {
-                            online.setFoodLevel(20);
-                            online.sendMessage(getMessages().getChatMessage(GRAY + "Your hunger has been sated."));
+                            online.setFireTicks(0);
+                            online.sendMessage(getMessages().getChatMessage(GRAY + "You have been extinguished."));
                         }
-                        sender.sendMessage(getMessages().getChatMessage(GRAY + "You have sated every ones hunger."));
+                        sender.sendMessage(getMessages().getChatMessage(GRAY + "You have extinguished everyone."));
                         return true;
                     }
 
@@ -103,16 +109,16 @@ public class FeedCommand implements CommandExecutor {
                         return true;
                     } else {
                         Player target = offlinePlayer.getPlayer();
-                        target.setFoodLevel(20);
-                        sender.sendMessage(getMessages().getChatMessage(GREEN + target.getName() + "'s " + GRAY + "hunger has been sated."));
-                        target.sendMessage(getMessages().getChatMessage(GRAY + "Your hunger has been sated."));
+
+                        target.setFireTicks(0);
+                        sender.sendMessage(getMessages().getChatMessage(GREEN + target.getName() + GRAY + " has been extinguished."));
+                        target.sendMessage(getMessages().getChatMessage(GRAY + "You have been extinguished."));
                     }
                 default:
                     sender.sendMessage(getMessages().getChatTag(INVALID_SYNTAX));
                     return true;
             }
         }
-
         return false;
     }
 }

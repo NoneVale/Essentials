@@ -1,20 +1,24 @@
 package net.nighthawkempires.essentials.commands;
 
 import com.google.common.collect.Maps;
+import net.nighthawkempires.core.CorePlugin;
 import net.nighthawkempires.core.bans.Ban;
 import net.nighthawkempires.core.bans.BanType;
 import net.nighthawkempires.core.mute.MuteType;
 import net.nighthawkempires.core.user.UserModel;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.logging.log4j.core.Core;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
+import java.io.Console;
 import java.util.Date;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -320,6 +324,256 @@ public class BanCommand implements CommandExecutor {
                                 + GRAY + " for " + YELLOW + reason.toString() + GRAY + "."));
                         getMessages().broadcatServerMessage(GREEN + targetUserModel.getUserName() + GRAY + " has been banned by " + GREEN
                                 + player.getName() + GRAY + " for " + YELLOW + reason.toString() + GRAY + ".");
+                        if (offlineTargetPlayer.isOnline()) {
+                            offlineTargetPlayer.getPlayer().kickPlayer(ban.getBanInfo());
+                        }
+                        return true;
+                    }
+            }
+        } else if (sender instanceof ConsoleCommandSender) {
+            switch (args.length) {
+                case 0:
+                    sender.sendMessage(help);
+                    return true;
+                case 1:
+                    switch (args[0].toLowerCase()) {
+                        case "help":
+                            sender.sendMessage(help);
+                            return true;
+                        default:
+                            String targetName = args[0];
+                            OfflinePlayer offlineTargetPlayer = Bukkit.getOfflinePlayer(targetName);
+                            if (!getUserRegistry().userExists(offlineTargetPlayer.getUniqueId())) {
+                                sender.sendMessage(getMessages().getChatTag(PLAYER_NOT_FOUND));
+                                return true;
+                            }
+
+                            UserModel targetUserModel = getUserRegistry().getUser(offlineTargetPlayer.getUniqueId());
+
+                            Map<String, Object> banMap = Maps.newHashMap();
+                            banMap.put("banned-by", CorePlugin.getConfigg().getConsoleUuid().toString());
+                            banMap.put("banned-user", offlineTargetPlayer.getUniqueId().toString());
+                            banMap.put("ban-type", BanType.PERM.toString());
+                            banMap.put("ban-reason", "Unspecified");
+                            banMap.put("ban-issued", System.currentTimeMillis());
+                            banMap.put("ban-active", true);
+                            Ban ban = new Ban(banMap);
+                            targetUserModel.ban(ban);
+
+                            sender.sendMessage(getMessages().getChatMessage(GRAY + "You have permanently banned " + GREEN + offlineTargetPlayer.getName()
+                                    + GRAY + " for " + YELLOW + "Unspecified" + GRAY + "."));
+                            getMessages().broadcatServerMessage(GREEN + targetUserModel.getUserName() + GRAY + " has been banned by " + GREEN
+                                    + CorePlugin.getConfigg().getConsoleDisplayName() + GRAY + " for " + YELLOW + "Unspecified" + GRAY + ".");
+                            if (offlineTargetPlayer.isOnline()) {
+                                offlineTargetPlayer.getPlayer().kickPlayer(ban.getBanInfo());
+                            }
+                            return true;
+                    }
+                case 2:
+                    if (args[1].startsWith("-")) {
+                        String targetName = args[0];
+                        OfflinePlayer offlineTargetPlayer = Bukkit.getOfflinePlayer(targetName);
+                        if (!getUserRegistry().userExists(offlineTargetPlayer.getUniqueId())) {
+                            sender.sendMessage(getMessages().getChatTag(PLAYER_NOT_FOUND));
+                            return true;
+                        }
+
+                        UserModel targetUserModel = getUserRegistry().getUser(offlineTargetPlayer.getUniqueId());
+
+                        String timeString = args[1].substring(1, args[1].length() - 1);
+
+                        if (!NumberUtils.isNumber(timeString)) {
+                            sender.sendMessage(getMessages().getChatMessage(ChatColor.GRAY + "The duration must be a number instead of a string."));
+                            return true;
+                        }
+
+                        int duration = Integer.parseInt(timeString);
+
+                        String timeUnitString = args[1].substring(args[1].length() - 1);
+
+                        Date mutedUntil = null;
+                        TimeUnit timeUnit = null;
+                        switch (timeUnitString.toLowerCase()) {
+                            case "s":
+                                timeUnit = TimeUnit.SECONDS;
+                                mutedUntil = DateUtils.addSeconds(new Date(), duration);
+                                break;
+                            case "m":
+                                timeUnit = TimeUnit.MINUTES;
+                                mutedUntil = DateUtils.addMinutes(new Date(), duration);
+                                break;
+                            case "h":
+                                timeUnit = TimeUnit.HOURS;
+                                mutedUntil = DateUtils.addHours(new Date(), duration);
+                                break;
+                            case "d":
+                                timeUnit = TimeUnit.DAYS;
+                                mutedUntil = DateUtils.addDays(new Date(), duration);
+                                break;
+                        }
+
+                        if (mutedUntil == null) {
+                            sender.sendMessage(getMessages().getChatMessage(GRAY + "I'm sorry, but please suffix the end of" +
+                                    " the time argument with s for seconds, m for minutes, h for hours, or d for days."));
+                            return true;
+                        }
+
+                        Map<String, Object> banMap = Maps.newHashMap();
+                        banMap.put("banned-by", CorePlugin.getConfigg().getConsoleUuid().toString());
+                        banMap.put("banned-user", offlineTargetPlayer.getUniqueId().toString());
+                        banMap.put("ban-type", MuteType.TEMP.toString());
+                        banMap.put("ban-reason", "Unspecified");
+                        banMap.put("ban-issued", System.currentTimeMillis());
+                        banMap.put("banned-until", mutedUntil.getTime());
+                        banMap.put("ban-active", true);
+                        Ban ban = new Ban(banMap);
+                        targetUserModel.ban(ban);
+
+                        sender.sendMessage(getMessages().getChatMessage(GRAY + "You have temporarily banned " + GREEN + offlineTargetPlayer.getName() + GRAY
+                                + " for " + GOLD + duration + " " + timeUnit.toString() + GRAY + " for " + YELLOW + "Unspecified" + GRAY + "."));
+                        getMessages().broadcatServerMessage(GREEN + targetUserModel.getUserName() + GRAY + " has been banned by " + GREEN
+                                + CorePlugin.getConfigg().getConsoleDisplayName() + GRAY + " for " + YELLOW + "Unspecified" + GRAY + ".");
+                        if (offlineTargetPlayer.isOnline()) {
+                            offlineTargetPlayer.getPlayer().kickPlayer(ban.getBanInfo());
+                        }
+                        return true;
+                    } else {
+                        String targetName = args[0];
+                        OfflinePlayer offlineTargetPlayer = Bukkit.getOfflinePlayer(targetName);
+                        if (!getUserRegistry().userExists(offlineTargetPlayer.getUniqueId())) {
+                            sender.sendMessage(getMessages().getChatTag(PLAYER_NOT_FOUND));
+                            return true;
+                        }
+
+                        UserModel targetUserModel = getUserRegistry().getUser(offlineTargetPlayer.getUniqueId());
+
+                        String reason = args[1];
+
+                        Map<String, Object> banMap = Maps.newHashMap();
+                        banMap.put("banned-by", CorePlugin.getConfigg().getConsoleUuid().toString());
+                        banMap.put("banned-user", offlineTargetPlayer.getUniqueId().toString());
+                        banMap.put("ban-type", BanType.PERM.toString());
+                        banMap.put("ban-reason", reason);
+                        banMap.put("ban-issued", System.currentTimeMillis());
+                        banMap.put("ban-active", true);
+                        Ban ban = new Ban(banMap);
+                        targetUserModel.ban(ban);
+
+                        sender.sendMessage(getMessages().getChatMessage(GRAY + "You have permanently banned " + GREEN + offlineTargetPlayer.getName()
+                                + GRAY + " for " + YELLOW + reason + GRAY + "."));
+                        getMessages().broadcatServerMessage(GREEN + targetUserModel.getUserName() + GRAY + " has been banned by " + GREEN
+                                + CorePlugin.getConfigg().getConsoleDisplayName() + GRAY + " for " + YELLOW + reason + GRAY + ".");
+                        if (offlineTargetPlayer.isOnline()) {
+                            offlineTargetPlayer.getPlayer().kickPlayer(ban.getBanInfo());
+                        }
+                        return true;
+                    }
+                default:
+                    if (args[1].startsWith("-")) {
+                        String targetName = args[0];
+                        OfflinePlayer offlineTargetPlayer = Bukkit.getOfflinePlayer(targetName);
+                        if (!getUserRegistry().userExists(offlineTargetPlayer.getUniqueId())) {
+                            sender.sendMessage(getMessages().getChatTag(PLAYER_NOT_FOUND));
+                            return true;
+                        }
+
+                        UserModel targetUserModel = getUserRegistry().getUser(offlineTargetPlayer.getUniqueId());
+
+                        String timeString = args[1].substring(1, args[1].length() - 1);
+
+                        if (!NumberUtils.isNumber(timeString)) {
+                            sender.sendMessage(getMessages().getChatMessage(ChatColor.GRAY + "The duration must be a number instead of a string."));
+                            return true;
+                        }
+
+                        int duration = Integer.parseInt(timeString);
+
+                        String timeUnitString = args[1].substring(args[1].length() - 1);
+
+                        Date mutedUntil = null;
+                        TimeUnit timeUnit = null;
+                        switch (timeUnitString.toLowerCase()) {
+                            case "s":
+                                timeUnit = TimeUnit.SECONDS;
+                                mutedUntil = DateUtils.addSeconds(new Date(), duration);
+                                break;
+                            case "m":
+                                timeUnit = TimeUnit.MINUTES;
+                                mutedUntil = DateUtils.addMinutes(new Date(), duration);
+                                break;
+                            case "h":
+                                timeUnit = TimeUnit.HOURS;
+                                mutedUntil = DateUtils.addHours(new Date(), duration);
+                                break;
+                            case "d":
+                                timeUnit = TimeUnit.DAYS;
+                                mutedUntil = DateUtils.addDays(new Date(), duration);
+                                break;
+                        }
+
+                        if (mutedUntil == null) {
+                            sender.sendMessage(getMessages().getChatMessage(GRAY + "I'm sorry, but please suffix the end of" +
+                                    " the time argument with s for seconds, m for minutes, h for hours, or d for days."));
+                            return true;
+                        }
+
+                        StringBuilder reason = new StringBuilder();
+                        for (int i = 2; i < args.length; i++) {
+                            reason.append(args[i]);
+                            if (i < args.length - 1)
+                                reason.append(" ");
+                        }
+
+                        Map<String, Object> banMap = Maps.newHashMap();
+                        banMap.put("banned-by", CorePlugin.getConfigg().getConsoleUuid().toString());
+                        banMap.put("banned-user", offlineTargetPlayer.getUniqueId().toString());
+                        banMap.put("ban-type", MuteType.TEMP.toString());
+                        banMap.put("ban-reason", reason.toString());
+                        banMap.put("ban-issued", System.currentTimeMillis());
+                        banMap.put("banned-until", mutedUntil.getTime());
+                        banMap.put("ban-active", true);
+                        Ban ban = new Ban(banMap);
+                        targetUserModel.ban(ban);
+
+                        sender.sendMessage(getMessages().getChatMessage(GRAY + "You have temporarily banned " + GREEN + offlineTargetPlayer.getName() + GRAY
+                                + " for " + GOLD + duration + " " + timeUnit.toString() + GRAY + " for " + YELLOW + reason.toString() + GRAY + "."));
+                        getMessages().broadcatServerMessage(GREEN + targetUserModel.getUserName() + GRAY + " has been banned by " + GREEN
+                                + CorePlugin.getConfigg().getConsoleDisplayName() + GRAY + " for " + YELLOW + reason.toString() + GRAY + ".");
+                        if (offlineTargetPlayer.isOnline()) {
+                            offlineTargetPlayer.getPlayer().kickPlayer(ban.getBanInfo());
+                        }
+                        return true;
+                    } else {
+                        String targetName = args[0];
+                        OfflinePlayer offlineTargetPlayer = Bukkit.getOfflinePlayer(targetName);
+                        if (!getUserRegistry().userExists(offlineTargetPlayer.getUniqueId())) {
+                            sender.sendMessage(getMessages().getChatTag(PLAYER_NOT_FOUND));
+                            return true;
+                        }
+
+                        UserModel targetUserModel = getUserRegistry().getUser(offlineTargetPlayer.getUniqueId());
+
+                        StringBuilder reason = new StringBuilder();
+                        for (int i = 1; i < args.length; i++) {
+                            reason.append(args[i]);
+                            if (i < args.length - 1)
+                                reason.append(" ");
+                        }
+
+                        Map<String, Object> banMap = Maps.newHashMap();
+                        banMap.put("banned-by", CorePlugin.getConfigg().getConsoleUuid().toString());
+                        banMap.put("banned-user", offlineTargetPlayer.getUniqueId().toString());
+                        banMap.put("ban-type", BanType.PERM.toString());
+                        banMap.put("ban-reason", reason.toString());
+                        banMap.put("ban-issued", System.currentTimeMillis());
+                        banMap.put("ban-active", true);
+                        Ban ban = new Ban(banMap);
+                        targetUserModel.ban(ban);
+
+                        sender.sendMessage(getMessages().getChatMessage(GRAY + "You have permanently banned " + GREEN + offlineTargetPlayer.getName()
+                                + GRAY + " for " + YELLOW + reason.toString() + GRAY + "."));
+                        getMessages().broadcatServerMessage(GREEN + targetUserModel.getUserName() + GRAY + " has been banned by " + GREEN
+                                + CorePlugin.getConfigg().getConsoleDisplayName() + GRAY + " for " + YELLOW + reason.toString() + GRAY + ".");
                         if (offlineTargetPlayer.isOnline()) {
                             offlineTargetPlayer.getPlayer().kickPlayer(ban.getBanInfo());
                         }

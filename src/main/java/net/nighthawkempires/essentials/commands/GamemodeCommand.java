@@ -6,6 +6,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import static net.nighthawkempires.core.CorePlugin.*;
@@ -183,6 +184,87 @@ public class GamemodeCommand implements CommandExecutor {
                                 return true;
                             default:
                                 player.sendMessage(getMessages().getChatMessage(GRAY + "I'm sorry, but that is not a valid gamemode."));
+                                return true;
+                        }
+                    }
+            }
+        } else if (sender instanceof ConsoleCommandSender) {
+            switch (args.length) {
+                case 0:
+                case 1:
+                    sender.sendMessage(help);
+                    return true;
+                case 2:
+                    String name = args[1];
+                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
+                    if (!offlinePlayer.isOnline()) {
+                        sender.sendMessage(getMessages().getChatTag(PLAYER_NOT_ONLINE));
+                        return true;
+                    } else {
+                        Player target = offlinePlayer.getPlayer();
+                        switch (args[0].toLowerCase()) {
+                            case "s":
+                            case "0":
+                            case "survival":
+                                if (target.getGameMode() == GameMode.SURVIVAL) {
+                                    sender.sendMessage(getMessages().getChatMessage(GREEN + target.getName() + "'s " + GRAY + "gamemode is already set to "
+                                            + gameModeName(GameMode.SURVIVAL) + "."));
+                                    return true;
+                                }
+
+                                target.setGameMode(GameMode.SURVIVAL);
+                                sender.sendMessage(getMessages().getChatMessage(GREEN + target.getName() + "'s " + GRAY + "gamemode has been set to "
+                                        + gameModeName(GameMode.SURVIVAL) + "."));
+                                target.sendMessage(getMessages().getChatMessage(GRAY + "Your gamemode has been set to "
+                                        + gameModeName(GameMode.SPECTATOR) + "."));
+                                return true;
+                            case "c":
+                            case "1":
+                            case "creative":
+                                if (target.getGameMode() == GameMode.CREATIVE) {
+                                    sender.sendMessage(getMessages().getChatMessage(GREEN + target.getName() + "'s " + GRAY + "gamemode is already set to "
+                                            + gameModeName(GameMode.CREATIVE) + "."));
+                                    return true;
+                                }
+
+                                target.setGameMode(GameMode.CREATIVE);
+                                sender.sendMessage(getMessages().getChatMessage(GREEN + target.getName() + "'s " + GRAY + "gamemode has been set to "
+                                        + gameModeName(GameMode.CREATIVE) + "."));
+                                target.sendMessage(getMessages().getChatMessage(GRAY + "Your gamemode has been set to "
+                                        + gameModeName(GameMode.SPECTATOR) + "."));
+                                return true;
+                            case "a":
+                            case "2":
+                            case "adventure":
+                                if (target.getGameMode() == GameMode.ADVENTURE) {
+                                    sender.sendMessage(getMessages().getChatMessage(GREEN + target.getName() + "'s " + GRAY + "gamemode is already set to "
+                                            + gameModeName(GameMode.ADVENTURE) + "."));
+                                    return true;
+                                }
+
+                                target.setGameMode(GameMode.ADVENTURE);
+                                sender.sendMessage(getMessages().getChatMessage(GREEN + target.getName() + "'s " + GRAY + "gamemode has been set to "
+                                        + gameModeName(GameMode.ADVENTURE) + "."));
+                                target.sendMessage(getMessages().getChatMessage(GRAY + "Your gamemode has been set to "
+                                        + gameModeName(GameMode.SPECTATOR) + "."));
+                                return true;
+                            case "sp":
+                            case "3":
+                            case "spectator":
+                                if (target.getGameMode() == GameMode.SPECTATOR) {
+                                    sender.sendMessage(getMessages().getChatMessage(GREEN + target.getName() + "'s " + GRAY + "gamemode is already set to "
+                                            + gameModeName(GameMode.SPECTATOR) + "."));
+                                    return true;
+                                }
+
+                                target.setGameMode(GameMode.SPECTATOR);
+                                sender.sendMessage(getMessages().getChatMessage(GREEN + target.getName() + "'s " + GRAY + "gamemode has been set to "
+                                        + gameModeName(GameMode.SPECTATOR) + "."));
+                                target.sendMessage(getMessages().getChatMessage(GRAY + "Your gamemode has been set to "
+                                        + gameModeName(GameMode.SPECTATOR) + "."));
+                                return true;
+                            default:
+                                sender.sendMessage(getMessages().getChatMessage(GRAY + "I'm sorry, but that is not a valid gamemode."));
                                 return true;
                         }
                     }

@@ -1,9 +1,13 @@
 package net.nighthawkempires.essentials.listeners;
 
+import net.nighthawkempires.core.CorePlugin;
+import net.nighthawkempires.core.location.PublicLocationModel;
 import net.nighthawkempires.essentials.EssentialsPlugin;
+import org.apache.logging.log4j.core.Core;
 import org.bukkit.Bukkit;
 import org.bukkit.GameRule;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,6 +18,8 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -153,6 +159,18 @@ public class PlayerListener implements Listener {
                         event.setCancelled(true);
                     }
                 }
+            }
+        }
+    }
+
+    @EventHandler
+    public void onRespawn(PlayerRespawnEvent event) {
+        World world = Bukkit.getWorld("world");
+        if (world != null) {
+            PublicLocationModel publicLocationModel = CorePlugin.getPublicLocationRegistry().getPublicLocations();
+
+            if (publicLocationModel.hasSpawn(world)) {
+                event.setRespawnLocation(publicLocationModel.getSpawn(world));
             }
         }
     }

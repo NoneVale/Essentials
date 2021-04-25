@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -74,6 +75,9 @@ public class RenameCommand implements CommandExecutor {
                     player.sendMessage(getMessages().getChatMessage(GRAY + "You have renamed the item in your main hand to " + name + GRAY + "."));
                     return true;
             }
+        } else if (sender instanceof ConsoleCommandSender) {
+            sender.sendMessage(getMessages().getChatMessage(GRAY + "This command is not available from the console."));
+            return true;
         }
         return false;
     }

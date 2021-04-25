@@ -6,6 +6,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import static net.nighthawkempires.core.CorePlugin.*;
@@ -35,11 +36,13 @@ public class ScoreboardCommand implements CommandExecutor {
 
             switch (args.length) {
                 case 0:
-                    if (getScoreboardManager().getPlayerScoreboardMap().containsKey(player.getUniqueId())) {
+                    if (userModel.isScoreboardEnabled()) {
+                        userModel.setScoreboardEnabled(false);
                         getScoreboardManager().stopScoreboards(player);
                         player.sendMessage(getMessages().getChatMessage(GRAY + "You have stopped your scoreboards."));
                         return true;
                     } else {
+                        userModel.setScoreboardEnabled(true);
                         getScoreboardManager().startScoreboards(player);
                         player.sendMessage(getMessages().getChatMessage(GRAY + "You have started your scoreboards."));
                         return true;
@@ -48,8 +51,10 @@ public class ScoreboardCommand implements CommandExecutor {
                     player.sendMessage(getMessages().getChatTag(INVALID_SYNTAX));
                     return true;
             }
+        } else if (sender instanceof ConsoleCommandSender) {
+            sender.sendMessage(getMessages().getChatMessage(GRAY + "This command is not available from the console."));
+            return true;
         }
-
         return false;
     }
 }

@@ -7,6 +7,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import static net.nighthawkempires.core.CorePlugin.*;
@@ -25,7 +26,7 @@ public class NicknameCommand implements CommandExecutor {
             getMessages().getMessage(CHAT_HEADER),
             DARK_GRAY + "Command" + GRAY + ": Nickname    " + DARK_GRAY + "    [Optional], <Required>",
             getMessages().getMessage(CHAT_FOOTER),
-            getMessages().getCommand("nick", "[player] <nickname>", "Set a nickname"),
+            getMessages().getCommand("nick", "<player> <nickname>", "Set a nickname"),
             getMessages().getMessage(CHAT_FOOTER)
     };
 
@@ -85,6 +86,33 @@ public class NicknameCommand implements CommandExecutor {
                     nickname = ChatColor.translateAlternateColorCodes('&', args[1]);
                     userModel.setDisplayName(nickname);
                     player.sendMessage(getMessages().getChatMessage(GRAY + "You have set " + GREEN + offlinePlayer.getName() + "'s "
+                            + GRAY + " nickname to " + nickname + GRAY + "."));
+                    if (offlinePlayer.isOnline()) {
+                        Player target = offlinePlayer.getPlayer();
+                        target.setDisplayName(nickname);
+                        target.sendMessage(getMessages().getChatMessage(GRAY + "Your nickname has been set to " + nickname + GRAY + "."));
+                    }
+                    return true;
+            }
+        } else if (sender instanceof ConsoleCommandSender) {
+            switch (args.length) {
+                case 0:
+                case 1:
+                    sender.sendMessage(helpAdmin);
+                    return true;
+                case 2:
+                    String name = args[0];
+                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
+                    if (!getUserRegistry().userExists(offlinePlayer.getUniqueId())) {
+                        sender.sendMessage(getMessages().getChatTag(PLAYER_NOT_FOUND));
+                        return true;
+                    }
+
+                    UserModel userModel = getUserRegistry().getUser(offlinePlayer.getUniqueId());
+
+                    String nickname = ChatColor.translateAlternateColorCodes('&', args[1]);
+                    userModel.setDisplayName(nickname);
+                    sender.sendMessage(getMessages().getChatMessage(GRAY + "You have set " + GREEN + offlinePlayer.getName() + "'s "
                             + GRAY + " nickname to " + nickname + GRAY + "."));
                     if (offlinePlayer.isOnline()) {
                         Player target = offlinePlayer.getPlayer();

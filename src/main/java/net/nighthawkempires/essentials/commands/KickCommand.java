@@ -1,12 +1,15 @@
 package net.nighthawkempires.essentials.commands;
 
+import net.nighthawkempires.core.CorePlugin;
 import net.nighthawkempires.core.kick.Kick;
 import net.nighthawkempires.core.user.UserModel;
+import org.apache.logging.log4j.core.Core;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import static net.nighthawkempires.core.CorePlugin.*;
@@ -85,6 +88,57 @@ public class KickCommand implements CommandExecutor {
                         return true;
                     } else {
                         player.sendMessage(getMessages().getChatTag(PLAYER_NOT_ONLINE));
+                        return true;
+                    }
+            }
+        } else if (sender instanceof ConsoleCommandSender) {
+            switch (args.length) {
+                case 0:
+                    sender.sendMessage(help);
+                    return true;
+                case 1:
+                    String name = args[0];
+                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
+                    if (offlinePlayer.isOnline()) {
+                        Player target = offlinePlayer.getPlayer();
+
+                        UserModel userModel = getUserRegistry().getUser(target.getUniqueId());
+                        Kick kick = Kick.getKick(CorePlugin.getConfigg().getConsoleUuid(), "Unspecified", System.currentTimeMillis());
+                        userModel.kick(kick);
+                        target.kickPlayer(kick.getKickInfo());
+                        sender.sendMessage(getMessages().getChatMessage(GRAY + "You have kicked " + GREEN + target.getName()
+                                + GRAY + " for " + YELLOW + "Unspecified" + GRAY + "."));
+                        getMessages().broadcatServerMessage(GREEN + target.getName() + GRAY + " has been kicked by " + GREEN
+                                + CorePlugin.getConfigg().getConsoleDisplayName() + GRAY + " for " + YELLOW + "Unspecified" + GRAY + ".");
+                        return true;
+                    } else {
+                        sender.sendMessage(getMessages().getChatTag(PLAYER_NOT_ONLINE));
+                        return true;
+                    }
+                default:
+                    name = args[0];
+                    offlinePlayer = Bukkit.getOfflinePlayer(name);
+                    if (offlinePlayer.isOnline()) {
+                        Player target = offlinePlayer.getPlayer();
+
+                        StringBuilder reason = new StringBuilder();
+                        for (int i = 1; i < args.length; i++) {
+                            reason.append(args[i]);
+                            if (i < args.length - 1)
+                                reason.append(" ");
+                        }
+
+                        UserModel userModel = getUserRegistry().getUser(target.getUniqueId());
+                        Kick kick = Kick.getKick(CorePlugin.getConfigg().getConsoleUuid(), reason.toString().trim(), System.currentTimeMillis());
+                        userModel.kick(kick);
+                        target.kickPlayer(kick.getKickInfo());
+                        sender.sendMessage(getMessages().getChatMessage(GRAY + "You have kicked " + GREEN + target.getName()
+                                + GRAY + " for " + YELLOW + kick.getKickReason() + GRAY + "."));
+                        getMessages().broadcatServerMessage(GREEN + target.getName() + GRAY + " has been kicked by " + GREEN
+                                + CorePlugin.getConfigg().getConsoleDisplayName() + GRAY + " for " + YELLOW + kick.getKickReason() + GRAY + ".");
+                        return true;
+                    } else {
+                        sender.sendMessage(getMessages().getChatTag(PLAYER_NOT_ONLINE));
                         return true;
                     }
             }

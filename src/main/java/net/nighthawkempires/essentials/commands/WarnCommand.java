@@ -1,5 +1,6 @@
 package net.nighthawkempires.essentials.commands;
 
+import net.nighthawkempires.core.CorePlugin;
 import net.nighthawkempires.core.kick.Kick;
 import net.nighthawkempires.core.user.UserModel;
 import net.nighthawkempires.core.warning.Warning;
@@ -8,6 +9,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import static net.nighthawkempires.core.CorePlugin.*;
@@ -94,6 +96,63 @@ public class WarnCommand implements CommandExecutor {
                         Player target = offlinePlayer.getPlayer();
 
                         target.sendMessage(getMessages().getChatMessage(GRAY + "You have been warned by " + GREEN + player.getName()
+                                + GRAY + " for " + YELLOW + warning.getWarnReason() + GRAY + "."));
+                    }
+                    return true;
+            }
+        } else if (sender instanceof ConsoleCommandSender) {
+            switch (args.length) {
+                case 0:
+                    sender.sendMessage(help);
+                    return true;
+                case 1:
+                    String name = args[0];
+                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
+                    if (!getUserRegistry().userExists(offlinePlayer.getUniqueId())) {
+                        sender.sendMessage(getMessages().getChatTag(PLAYER_NOT_FOUND));
+                        return true;
+                    }
+
+                    UserModel targetUserModel = getUserRegistry().getUser(offlinePlayer.getUniqueId());
+
+                    Warning warning = Warning.getWarning(CorePlugin.getConfigg().getConsoleUuid(), "Unspecified", System.currentTimeMillis());
+                    targetUserModel.warn(warning);
+
+                    sender.sendMessage(getMessages().getChatMessage(GRAY + "You have warned " + GREEN + offlinePlayer.getName()
+                            + GRAY + " for " + YELLOW + warning.getWarnReason() + GRAY + "."));
+                    if (offlinePlayer.isOnline()) {
+                        Player target = offlinePlayer.getPlayer();
+
+                        target.sendMessage(getMessages().getChatMessage(GRAY + "You have been warned by " + GREEN + CorePlugin.getConfigg().getConsoleDisplayName()
+                                + GRAY + " for " + YELLOW + warning.getWarnReason() + GRAY + "."));
+                    }
+                    return true;
+                default:
+                    name = args[0];
+                    offlinePlayer = Bukkit.getOfflinePlayer(name);
+                    if (!getUserRegistry().userExists(offlinePlayer.getUniqueId())) {
+                        sender.sendMessage(getMessages().getChatTag(PLAYER_NOT_FOUND));
+                        return true;
+                    }
+
+                    targetUserModel = getUserRegistry().getUser(offlinePlayer.getUniqueId());
+
+                    StringBuilder reason = new StringBuilder();
+                    for (int i = 1; i < args.length; i++) {
+                        reason.append(args[i]);
+                        if (i < args.length - 1)
+                            reason.append(" ");
+                    }
+
+                    warning = Warning.getWarning(CorePlugin.getConfigg().getConsoleUuid(), reason.toString().trim(), System.currentTimeMillis());
+                    targetUserModel.warn(warning);
+
+                    sender.sendMessage(getMessages().getChatMessage(GRAY + "You have warned " + GREEN + offlinePlayer.getName()
+                            + GRAY + " for " + YELLOW + warning.getWarnReason() + GRAY + "."));
+                    if (offlinePlayer.isOnline()) {
+                        Player target = offlinePlayer.getPlayer();
+
+                        target.sendMessage(getMessages().getChatMessage(GRAY + "You have been warned by " + GREEN + CorePlugin.getConfigg().getConsoleDisplayName()
                                 + GRAY + " for " + YELLOW + warning.getWarnReason() + GRAY + "."));
                     }
                     return true;

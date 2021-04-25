@@ -45,6 +45,7 @@ public class EssentialsPlugin extends JavaPlugin {
 
     public void registerCommands() {
         this.getCommand("ban").setExecutor(new BanCommand());
+        this.getCommand("banip").setExecutor(new BanIPCommand());
         this.getCommand("chat").setExecutor(new ChatCommand());
         this.getCommand("clearinventory").setExecutor(new ClearInventoryCommand());
         this.getCommand("craft").setExecutor(new CraftCommand());
@@ -55,11 +56,13 @@ public class EssentialsPlugin extends JavaPlugin {
         this.getCommand("delwarp").setExecutor(new DeleteWarpCommand());
         this.getCommand("deop").setExecutor(new DeOPCommand());
         this.getCommand("enderchest").setExecutor(new EnderChestCommand());
+        this.getCommand("extinguish").setExecutor(new ExtinguishCommand());
         this.getCommand("feed").setExecutor(new FeedCommand());
         this.getCommand("fly").setExecutor(new FlyCommand());
         this.getCommand("gamemode").setExecutor(new GamemodeCommand());
         this.getCommand("give").setExecutor(new GiveCommand());
         this.getCommand("godmode").setExecutor(new GodmodeCommand());
+        this.getCommand("hat").setExecutor(new HatCommand());
         this.getCommand("heal").setExecutor(new HealCommand());
         this.getCommand("help").setExecutor(new HelpCommand());
         this.getCommand("home").setExecutor(new HomeCommand());
@@ -95,6 +98,7 @@ public class EssentialsPlugin extends JavaPlugin {
         this.getCommand("tpaccept").setExecutor(new TPAcceptCommand());
         this.getCommand("tpa").setExecutor(new TPACommand());
         this.getCommand("unban").setExecutor(new UnbanCommand());
+        this.getCommand("unbanip").setExecutor(new UnbanIPCommand());
         this.getCommand("unmute").setExecutor(new UnmuteCommand());
         this.getCommand("vanish").setExecutor(new VanishCommand());
         this.getCommand("warn").setExecutor(new WarnCommand());

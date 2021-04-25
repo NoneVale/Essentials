@@ -1,10 +1,12 @@
 package net.nighthawkempires.essentials.commands;
 
+import net.nighthawkempires.core.CorePlugin;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import static net.nighthawkempires.core.CorePlugin.getCommandManager;
@@ -66,8 +68,34 @@ public class MessageCommand implements CommandExecutor {
                     getPlayerData().getReplyMap().put(target.getUniqueId(), player.getUniqueId());
                     return true;
             }
-        }
+        } else if (sender instanceof ConsoleCommandSender) {
+            switch (args.length) {
+                case 0:
+                    sender.sendMessage(help);
+                    return true;
+                case 1:
+                    sender.sendMessage(getMessages().getChatTag(INVALID_SYNTAX));
+                    return true;
+                default:
+                    StringBuilder messageBuilder = new StringBuilder();
+                    for (int i = 1; i < args.length; i++) {
+                        messageBuilder.append(args[i]).append(" ");
+                    }
 
+                    String name = args[0];
+                    OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(name);
+                    if (!offlinePlayer.isOnline()) {
+                        sender.sendMessage(getMessages().getChatTag(PLAYER_NOT_ONLINE));
+                        return true;
+                    }
+
+                    Player target = offlinePlayer.getPlayer();
+
+                    sender.sendMessage(getMessages().formatMSGOut(target, messageBuilder.toString().trim()));
+                    target.sendMessage(getMessages().formatMSGIn(CorePlugin.getConfigg().getConsoleDisplayName(), messageBuilder.toString().trim()));
+                    return true;
+            }
+        }
         return false;
     }
 }

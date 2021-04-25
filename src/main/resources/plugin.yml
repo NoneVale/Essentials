@@ -3,12 +3,15 @@ version: ${version}
 main: net.nighthawkempires.essentials.EssentialsPlugin
 description: Nighthawk Empires' Essentials Plugin.
 author: NoneVale_
-api-version: 1.15
+api-version: 1.16
 depend: [Core]
 commands:
   ban:
     usage: </command>
     description: Ban command for Nighthawk Empires' Essentials Plugin.
+  banip:
+    usage: </command>
+    description: Ban IP command for Nighthawk Empires' Essentials Plugin.
   chat:
     aliases: [say]
     usage: </command>
@@ -47,6 +50,10 @@ commands:
     aliases: [echest]
     usage: </command>
     description: Ender Chest command for Nighthawk Empires' Essentials Plugin.
+  extinguish:
+    aliases: [ext]
+    usage: </command>
+    description: Extinguish Chest command for Nighthawk Empires' Essentials Plugin.
   feed:
     usage: </command>
     description: Feed command for Nighthawk Empires' Essentials Plugin.
@@ -65,6 +72,9 @@ commands:
     aliases: [god]
     usage: </command>
     description: Godmode command for Nighthawk Empires' Essentials Plugin.
+  hat:
+    usage: </command>
+    description: Hat command for Nighthawk Empires' Essentials Plugin.
   heal:
     usage: </command>
     description: Heal command for Nighthawk Empires' Essentials Plugin.
@@ -175,8 +185,13 @@ commands:
     usage: </command>
     description: TPA command for Nighthawk Empires' Essentials Plugin.
   unban:
+    aliases: [pardon]
     usage: </command>
     description: Unban command for Nighthawk Empires' Essentials Plugin.
+  unbanip:
+    aliases: [pardonip]
+    usage: </command>
+    description: Unban IP command for Nighthawk Empires' Essentials Plugin.
   unmute:
     usage: </command>
     description: Unmute command for Nighthawk Empires' Essentials Plugin.
