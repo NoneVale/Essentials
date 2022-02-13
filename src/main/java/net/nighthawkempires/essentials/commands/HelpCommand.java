@@ -320,9 +320,13 @@ public class HelpCommand implements CommandExecutor {
         }
 
         for (String command : getCommands(sender)) {
-            commands.add(AQUA + "/" + command + DARK_GRAY + " - " + GRAY +
-                    (Bukkit.getPluginCommand(command).getDescription() != null ?
-                            Bukkit.getPluginCommand(command).getDescription() : ""));
+            if (Bukkit.getPluginCommand(command) != null) {
+                commands.add(AQUA + "/" + command + DARK_GRAY + " - " + GRAY +
+                        (Bukkit.getPluginCommand(command).getDescription() != null ?
+                                Bukkit.getPluginCommand(command).getDescription() : ""));
+            } else {
+                commands.add(AQUA + "/" + command);
+            }
         }
 
         plugins.sort(Collator.getInstance());
