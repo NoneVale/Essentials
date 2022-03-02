@@ -7,6 +7,7 @@ import net.nighthawkempires.essentials.kit.registry.FKitRegistry;
 import net.nighthawkempires.essentials.kit.registry.KitRegistry;
 import net.nighthawkempires.essentials.listeners.PlayerListener;
 
+import net.nighthawkempires.essentials.tabcompleters.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -37,6 +38,7 @@ public class EssentialsPlugin extends JavaPlugin {
 
         registerCommands();
         registerListeners();
+        registerTabCompleters();
     }
 
     public void onDisable() {
@@ -110,6 +112,22 @@ public class EssentialsPlugin extends JavaPlugin {
     public void registerListeners() {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new PlayerListener(), this);
+    }
+
+    public void registerTabCompleters() {
+        this.getCommand("ban").setTabCompleter(new BanTabCompleter());
+        this.getCommand("delhome").setTabCompleter(new DeleteHomeTabCompeter());
+        this.getCommand("delkit").setTabCompleter(new DeleteKitTabCompleter());
+        this.getCommand("delwarp").setTabCompleter(new DeleteWarpTabCompleter());
+        this.getCommand("deop").setTabCompleter(new DeOPTabCompleter());
+        this.getCommand("give").setTabCompleter(new GiveTabCompleter());
+        this.getCommand("home").setTabCompleter(new HomeTabCompleter());
+        this.getCommand("kit").setTabCompleter(new KitTabCompleter());
+        this.getCommand("spawnmob").setTabCompleter(new SpawnMobTabCompleter());
+        this.getCommand("speed").setTabCompleter(new SpeedTabCompleter());
+        this.getCommand("time").setTabCompleter(new TimeTabCompleter());
+        this.getCommand("warp").setTabCompleter(new WarpTabCompleter());
+        this.getCommand("weather").setTabCompleter(new WeatherTabCompleter());
     }
 
     public static Plugin getPlugin() {

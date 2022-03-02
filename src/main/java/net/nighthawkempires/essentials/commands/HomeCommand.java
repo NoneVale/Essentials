@@ -19,15 +19,14 @@ public class HomeCommand implements CommandExecutor {
 
     public HomeCommand() {
         getCommandManager().registerCommands("home", new String[] {
-                "ne.home.self", "ne.home.other"
+                "ne.home", "ne.home.other"
         });
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
 
-            if (!player.hasPermission("ne.home.self") && !player.hasPermission("ne.home.other")) {
+            if (!player.hasPermission("ne.home") && !player.hasPermission("ne.home.other")) {
                 player.sendMessage(getMessages().getChatTag(NO_PERMS));
                 return true;
             }
@@ -35,7 +34,7 @@ public class HomeCommand implements CommandExecutor {
             PlayerLocationModel playerLocationModel = getPlayerLocationRegistry().getPlayerLocations(player.getUniqueId());
             switch (args.length) {
                 case 0:
-                    if (!player.hasPermission("ne.home.self")) {
+                    if (!player.hasPermission("ne.home")) {
                         player.sendMessage(getMessages().getChatTag(NO_PERMS));
                         return true;
                     }
@@ -51,7 +50,7 @@ public class HomeCommand implements CommandExecutor {
                     player.sendMessage(getMessages().getChatMessage(GRAY + "You have teleported to home " + WHITE + name + GRAY + "."));
                     return true;
                 case 1:
-                    if (!player.hasPermission("ne.home.self")) {
+                    if (!player.hasPermission("ne.home")) {
                         player.sendMessage(getMessages().getChatTag(NO_PERMS));
                         return true;
                     }
@@ -72,9 +71,9 @@ public class HomeCommand implements CommandExecutor {
                         return true;
                     }
 
-                    name = args[0].toLowerCase();
+                    name = args[1].toLowerCase();
 
-                    String targetName = args[1];
+                    String targetName = args[0];
                     OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(targetName);
                     if (!getPlayerLocationRegistry().playerLocationsExist(offlinePlayer.getUniqueId())) {
                         player.sendMessage(getMessages().getChatTag(PLAYER_NOT_FOUND));

@@ -42,71 +42,90 @@ public class TimeCommand implements CommandExecutor {
                 return true;
             }
 
-            if (player.getInventory().getItemInMainHand() != null) {
-                if (player.getInventory().getItemInMainHand().getItemMeta() instanceof Damageable) {
-                    Damageable damageable = (Damageable) player.getInventory().getItemInMainHand().getItemMeta();
-
-                    player.sendMessage(damageable.getDamage() + "/" + player.getInventory().getItemInMainHand().getType().getMaxDurability());
-                }
-            }
-
             switch (args.length) {
-                case 0:
+                case 0 -> {
                     player.sendMessage(help);
                     return true;
-                case 1:
-                case 2:
+                }
+                case 1 -> {
                     World.Environment environment = player.getWorld().getEnvironment();
-
                     if (environment == World.Environment.NETHER || environment == World.Environment.THE_END) {
                         player.sendMessage(getMessages().getChatMessage(GRAY + "The time can not be set in this world."));
                         return true;
                     }
 
-                    if (args.length == 0 || (args.length > 0 && !args[1].toLowerCase().equals("-f"))) {
-                        switch (args[0].toLowerCase()) {
-                            case "day":
-                                player.getWorld().setTime(1000L);
-                                player.sendMessage(getMessages().getChatMessage(GRAY + "You have set the time to " + GOLD + "day" + GRAY
-                                        + " in world " + AQUA + player.getWorld().getName() + GRAY + "."));
-                                return true;
-                            case "noon":
-                                player.getWorld().setTime(6000L);
-                                player.sendMessage(getMessages().getChatMessage(GRAY + "You have set the time to " + GOLD + "noon" + GRAY
-                                        + " in world " + AQUA + player.getWorld().getName() + GRAY + "."));
-                                return true;
-                            case "night":
-                                player.getWorld().setTime(13000L);
-                                player.sendMessage(getMessages().getChatMessage(GRAY + "You have set the time to " + GOLD + "night" + GRAY
-                                        + " in world " + AQUA + player.getWorld().getName() + GRAY + "."));
-                                return true;
-                            default:
-                                if (!NumberUtils.isDigits(args[0])) {
-                                    player.sendMessage(getMessages().getChatMessage(GRAY + "Please make sure the time is a valid number."));
-                                    return true;
-                                }
-
-                                long time = Long.parseLong(args[0]);
-                                player.getWorld().setTime(time);
-                                player.sendMessage(getMessages().getChatMessage(GRAY + "You have set the time to " + GOLD + time + GRAY
-                                        + " in world " + AQUA + player.getWorld().getName() + GRAY + "."));
-                                return true;
-                        }
-                    } else {
-                        if (!NumberUtils.isDigits(args[0])) {
-                            player.sendMessage(getMessages().getChatMessage(GRAY + "Please make sure the time is a valid number."));
+                    switch (args[0].toLowerCase()) {
+                        case "day" -> {
+                            player.getWorld().setTime(1000L);
+                            player.sendMessage(getMessages().getChatMessage(GRAY + "You have set the time to " + GOLD + "day" + GRAY
+                                    + " in world " + AQUA + player.getWorld().getName() + GRAY + "."));
                             return true;
                         }
-
-                        long time = Long.parseLong(args[0]);
-                        player.getWorld().setFullTime(time);
-                        player.sendMessage(getMessages().getChatMessage(GRAY + "You have set the time to " + GOLD + time + GRAY
-                                + " in world " + AQUA + player.getWorld().getName() + GRAY + "."));
+                        case "noon" -> {
+                            player.getWorld().setTime(6000L);
+                            player.sendMessage(getMessages().getChatMessage(GRAY + "You have set the time to " + GOLD + "noon" + GRAY
+                                    + " in world " + AQUA + player.getWorld().getName() + GRAY + "."));
+                            return true;
+                        }
+                        case "sunset" -> {
+                            player.getWorld().setTime(12000L);
+                            player.sendMessage(getMessages().getChatMessage(GRAY + "You have set the time to " + GOLD + "sunset" + GRAY
+                                    + " in world " + AQUA + player.getWorld().getName() + GRAY + "."));
+                            return true;
+                        }
+                        case "night" -> {
+                            player.getWorld().setTime(13000L);
+                            player.sendMessage(getMessages().getChatMessage(GRAY + "You have set the time to " + GOLD + "night" + GRAY
+                                    + " in world " + AQUA + player.getWorld().getName() + GRAY + "."));
+                            return true;
+                        }
+                        case "midnight" -> {
+                            player.getWorld().setTime(18000L);
+                            player.sendMessage(getMessages().getChatMessage(GRAY + "You have set the time to " + GOLD + "midnight" + GRAY
+                                    + " in world " + AQUA + player.getWorld().getName() + GRAY + "."));
+                            return true;
+                        }
+                        case "sunrise" -> {
+                            player.getWorld().setTime(23000L);
+                            player.sendMessage(getMessages().getChatMessage(GRAY + "You have set the time to " + GOLD + "sunrise" + GRAY
+                                    + " in world " + AQUA + player.getWorld().getName() + GRAY + "."));
+                            return true;
+                        }
+                        default -> {
+                            if (!NumberUtils.isDigits(args[0])) {
+                                player.sendMessage(getMessages().getChatMessage(GRAY + "Please make sure the time is a valid number."));
+                                return true;
+                            }
+                            long time = Long.parseLong(args[0]);
+                            player.getWorld().setTime(time);
+                            player.sendMessage(getMessages().getChatMessage(GRAY + "You have set the time to " + GOLD + time + GRAY
+                                    + " in world " + AQUA + player.getWorld().getName() + GRAY + "."));
+                            return true;
+                        }
+                    }
+                }
+                case 2 -> {
+                    World.Environment environment = player.getWorld().getEnvironment();
+                    if (environment == World.Environment.NETHER || environment == World.Environment.THE_END) {
+                        player.sendMessage(getMessages().getChatMessage(GRAY + "The time can not be set in this world."));
                         return true;
                     }
-                default:
+
+                    if (!NumberUtils.isDigits(args[0])) {
+                        player.sendMessage(getMessages().getChatMessage(GRAY + "Please make sure the time is a valid number."));
+                        return true;
+                    }
+
+                    long time = Long.parseLong(args[0]);
+                    player.getWorld().setFullTime(time);
+                    player.sendMessage(getMessages().getChatMessage(GRAY + "You have set the time to " + GOLD + time + GRAY
+                            + " in world " + AQUA + player.getWorld().getName() + GRAY + "."));
+                    return true;
+                }
+                default -> {
                     player.sendMessage(getMessages().getChatTag(INVALID_SYNTAX));
                     return true;
+                }
             }
         } else if (sender instanceof ConsoleCommandSender) {
             sender.sendMessage(getMessages().getChatMessage(GRAY + "This command is not available from the console."));

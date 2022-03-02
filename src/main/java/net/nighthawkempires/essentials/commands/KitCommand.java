@@ -31,10 +31,9 @@ public class KitCommand implements CommandExecutor {
     };
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
 
-            if (!player.hasPermission("ne.kits")) {
+            if (!player.hasPermission("ne.kit")) {
                 player.sendMessage(getMessages().getChatTag(NO_PERMS));
                 return true;
             }
