@@ -22,7 +22,7 @@ public class WarpCommand implements CommandExecutor {
 
     public WarpCommand() {
         getCommandManager().registerCommands("warp", new String[] {
-                "ne.warps"
+                "ne.warp"
         });
     }
 
@@ -38,7 +38,7 @@ public class WarpCommand implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
-            if (!player.hasPermission("ne.warps")) {
+            if (!player.hasPermission("ne.warp")) {
                 player.sendMessage(getMessages().getChatTag(NO_PERMS));
                 return true;
             }

@@ -18,7 +18,7 @@ public class KitCommand implements CommandExecutor {
 
     public KitCommand() {
         getCommandManager().registerCommands("kit", new String[] {
-                "ne.kits"
+                "ne.kit"
         });
     }
 
@@ -53,6 +53,7 @@ public class KitCommand implements CommandExecutor {
 
                     if (!player.hasPermission("ne.kit." + kitModel.getKey().toLowerCase())) {
                         player.sendMessage(getMessages().getChatMessage(GRAY + "I'm sorry, but you do not have permission to use this kit."));
+                        return true;
                     }
 
                     if (!kitModel.canUse(player.getUniqueId())) {

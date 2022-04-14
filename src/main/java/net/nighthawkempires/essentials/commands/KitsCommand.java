@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 
 import static net.nighthawkempires.core.CorePlugin.getCommandManager;
 import static net.nighthawkempires.core.CorePlugin.getMessages;
+import static net.nighthawkempires.core.lang.Messages.NO_PERMS;
 import static org.bukkit.ChatColor.*;
 import static net.nighthawkempires.essentials.EssentialsPlugin.*;
 
@@ -18,13 +19,17 @@ public class KitsCommand implements CommandExecutor {
 
     public KitsCommand() {
         getCommandManager().registerCommands("kits", new String[] {
-                "ne.kits"
+                "ne.kit"
         });
     }
 
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (sender instanceof Player) {
-            Player player = (Player) sender;
+        if (sender instanceof Player player) {
+
+            if (!player.hasPermission("ne.kit")) {
+                player.sendMessage(getMessages().getChatTag(NO_PERMS));
+                return true;
+            }
 
             switch (args.length) {
                 case 0:

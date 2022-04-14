@@ -4,11 +4,16 @@ main: net.nighthawkempires.essentials.EssentialsPlugin
 description: Nighthawk Empires' Essentials Plugin.
 author: NoneVale_
 api-version: 1.17
-depend: [Core]
+depend: [Core, Votifier]
 commands:
+  back:
+    usage: </command>
+    description: Back command for Nighthawk Empires' Essentials Plugin.
+    permission: ne.back
   ban:
     usage: </command>
     description: Ban command for Nighthawk Empires' Essentials Plugin.
+    permission: ne.ban.temp
   banip:
     usage: </command>
     description: Ban IP command for Nighthawk Empires' Essentials Plugin.
@@ -139,6 +144,9 @@ commands:
     aliases: [scoreboards, sb]
     usage: </command>
     description: Scoreboard command for Nighthawk Empires' Essentials Plugin.
+  serverbooks:
+    usage: </command>
+    description: Server Books command for Nighthawk Empires' Essentials Plugin.
   sethome:
     usage: </command>
     description: Set Home command for Nighthawk Empires' Essentials Plugin.
@@ -151,6 +159,9 @@ commands:
   slap:
     usage: </command>
     description: Slap command for Nighthawk Empires' Essentials Plugin.
+  sleep:
+    usage: </command>
+    description: Sleep command for Nighthawk Empires' Essentials Plugin.
   smite:
     usage: </command>
     description: Smite command for Nighthawk Empires' Essentials Plugin.

@@ -3,7 +3,6 @@ package net.nighthawkempires.essentials.commands;
 import net.nighthawkempires.core.CorePlugin;
 import net.nighthawkempires.core.kick.Kick;
 import net.nighthawkempires.core.user.UserModel;
-import org.apache.logging.log4j.core.Core;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;

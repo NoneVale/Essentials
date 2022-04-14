@@ -79,8 +79,6 @@ public class KitModel implements Model {
             }
         }
 
-        System.out.println(this.items.size());
-
         getKitRegistry().register(this);
     }
 
@@ -90,7 +88,6 @@ public class KitModel implements Model {
 
     public void setCooldown(long cooldown) {
         this.cooldown = cooldown;
-        System.out.println(cooldown);
 
         getKitRegistry().register(this);
     }
@@ -164,6 +161,12 @@ public class KitModel implements Model {
                 itemList.add(itemTo64(itemStack));
             }
         }
+        /*List<Map<String, Object>> itemList = Lists.newArrayList();
+        for (ItemStack itemStack : items) {
+            if (!itemStack.getType().isAir()) {
+                itemList.add(itemStack.serialize());
+            }
+        }*/
         map.put("items", itemList);
 
         map.put("cooldown", cooldown);

@@ -29,7 +29,7 @@ public class SpawnCommand implements CommandExecutor {
         if (sender instanceof Player) {
             Player player = (Player) sender;
 
-            if (!player.hasPermission("ne.spawn") || !player.hasPermission("ne.spawn.other")) {
+            if (!player.hasPermission("ne.spawn") && !player.hasPermission("ne.spawn.other")) {
                 player.sendMessage(getMessages().getChatTag(NO_PERMS));
                 return true;
             }

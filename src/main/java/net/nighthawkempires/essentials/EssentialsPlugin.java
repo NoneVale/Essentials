@@ -7,6 +7,7 @@ import net.nighthawkempires.essentials.kit.registry.FKitRegistry;
 import net.nighthawkempires.essentials.kit.registry.KitRegistry;
 import net.nighthawkempires.essentials.listeners.PlayerListener;
 
+import net.nighthawkempires.essentials.listeners.VoteListener;
 import net.nighthawkempires.essentials.tabcompleters.*;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -46,6 +47,7 @@ public class EssentialsPlugin extends JavaPlugin {
     }
 
     public void registerCommands() {
+        this.getCommand("back").setExecutor(new BackCommand());
         this.getCommand("ban").setExecutor(new BanCommand());
         this.getCommand("banip").setExecutor(new BanIPCommand());
         this.getCommand("chat").setExecutor(new ChatCommand());
@@ -85,10 +87,12 @@ public class EssentialsPlugin extends JavaPlugin {
         this.getCommand("reply").setExecutor(new ReplyCommand());
         this.getCommand("sayas").setExecutor(new SayAsCommand());
         this.getCommand("scoreboard").setExecutor(new ScoreboardCommand());
+        this.getCommand("serverbooks").setExecutor(new ServerBooksCommand());
         this.getCommand("sethome").setExecutor(new SetHomeCommand());
         this.getCommand("setspawn").setExecutor(new SetSpawnCommand());
         this.getCommand("setwarp").setExecutor(new SetWarpCommand());
         this.getCommand("slap").setExecutor(new SlapCommand());
+        this.getCommand("sleep").setExecutor(new SleepCommand());
         this.getCommand("smite").setExecutor(new SmiteCommand());
         this.getCommand("spawn").setExecutor(new SpawnCommand());
         this.getCommand("spawnmob").setExecutor(new SpawnMobCommand());
@@ -112,6 +116,7 @@ public class EssentialsPlugin extends JavaPlugin {
     public void registerListeners() {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new PlayerListener(), this);
+        pm.registerEvents(new VoteListener(), this);
     }
 
     public void registerTabCompleters() {

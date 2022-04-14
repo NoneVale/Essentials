@@ -37,7 +37,8 @@ public class SetHomeCommand implements CommandExecutor {
                     String homeAmountString = info.getPermission().replaceFirst("ne.homes.", "");
 
                     if (NumberUtils.isDigits(homeAmountString)) {
-                        homes = Integer.parseInt(homeAmountString);
+                        int parsed = Integer.parseInt(homeAmountString);
+                        if (parsed > homes) homes = parsed;
                     }
                 }
             }

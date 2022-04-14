@@ -43,7 +43,6 @@ public class ScoreboardCommand implements CommandExecutor {
                         return true;
                     } else {
                         userModel.setScoreboardEnabled(true);
-                        getScoreboardManager().startScoreboards(player);
                         player.sendMessage(getMessages().getChatMessage(GRAY + "You have started your scoreboards."));
                         return true;
                     }

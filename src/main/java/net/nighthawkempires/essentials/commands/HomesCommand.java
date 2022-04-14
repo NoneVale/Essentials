@@ -19,7 +19,7 @@ public class HomesCommand implements CommandExecutor {
 
     public HomesCommand() {
         getCommandManager().registerCommands("homes", new String[] {
-                "ne.home.self", "ne.home.other"
+                "ne.home", "ne.home.other"
         });
     }
 
@@ -35,7 +35,7 @@ public class HomesCommand implements CommandExecutor {
             PlayerLocationModel playerLocationModel = getPlayerLocationRegistry().getPlayerLocations(player.getUniqueId());
             switch (args.length) {
                 case 0:
-                    if (!player.hasPermission("ne.home.self")) {
+                    if (!player.hasPermission("ne.home")) {
                         player.sendMessage(getMessages().getChatTag(NO_PERMS));
                         return true;
                     }

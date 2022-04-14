@@ -15,10 +15,7 @@ import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.*;
 import org.spigotmc.event.player.PlayerSpawnLocationEvent;
 
 import java.util.HashMap;
@@ -32,8 +29,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
+        if (event.getEntity() instanceof Player player) {
 
             if (getPlayerData().getGodmodeList().contains(player.getUniqueId())) event.setCancelled(true);
 
@@ -50,8 +46,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageByBlockEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
+        if (event.getEntity() instanceof Player player) {
 
             if (getPlayerData().getGodmodeList().contains(player.getUniqueId())) event.setCancelled(true);
 
@@ -68,8 +63,7 @@ public class PlayerListener implements Listener {
 
     @EventHandler
     public void onDamage(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
+        if (event.getEntity() instanceof Player player) {
 
             if (getPlayerData().getGodmodeList().contains(player.getUniqueId())) event.setCancelled(true);
 
@@ -143,23 +137,28 @@ public class PlayerListener implements Listener {
                         event.setCancelled(true);
                     } else {
                         warmingUp.put(player.getUniqueId(), commandMessage);
-                        player.sendMessage(getMessages().getChatMessage(GRAY + "You must wait " + GOLD + 5 + " seconds" + GRAY + " for command "
+                        player.sendMessage(getMessages().getChatMessage(GRAY + "You must wait " + GOLD + 3 + " seconds" + GRAY + " for command "
                                 + DARK_AQUA + "/" + command + GRAY + " to warm up."));
                         Bukkit.getScheduler().scheduleSyncDelayedTask(EssentialsPlugin.getPlugin(), () -> {
                             if (warmingUp.containsKey(player.getUniqueId())) {
-                                System.out.println("contains");
                                 if (warmingUp.get(player.getUniqueId()).equalsIgnoreCase(commandMessage)) {
-                                    System.out.println("equals");
                                     warmingUp.remove(player.getUniqueId());
                                     Bukkit.dispatchCommand(player, commandMessage);
-                                    System.out.println(commandMessage);
                                 }
                             }
-                        }, 120);
+                        }, 60L);
                         event.setCancelled(true);
                     }
                 }
             }
+        }
+    }
+
+    @EventHandler
+    public void onDeath(PlayerDeathEvent event) {
+        Player player = event.getEntity();
+        if (player.hasPermission("ne.back")) {
+            EssentialsPlugin.getPlayerData().getPreviousLocationMap().put(player.getUniqueId(), event.getEntity().getLocation());
         }
     }
 
@@ -169,8 +168,21 @@ public class PlayerListener implements Listener {
         if (world != null) {
             PublicLocationModel publicLocationModel = CorePlugin.getPublicLocationRegistry().getPublicLocations();
 
-            if (publicLocationModel.hasSpawn(world)) {
+            if (publicLocationModel.hasSpawn(world) && event.getPlayer().getBedSpawnLocation() == null) {
                 event.setRespawnLocation(publicLocationModel.getSpawn(world));
+            }
+        }
+    }
+
+    @EventHandler
+    public void onTeleport(PlayerTeleportEvent event) {
+        Player player = event.getPlayer();
+        if (player.hasPermission("ne.back")) {
+            switch (event.getCause()) {
+                case COMMAND, PLUGIN, SPECTATE, UNKNOWN -> {
+                    EssentialsPlugin.getPlayerData().getPreviousLocationMap().put(player.getUniqueId(), event.getFrom());
+                }
+                default -> {}
             }
         }
     }
